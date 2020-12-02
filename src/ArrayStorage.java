@@ -1,0 +1,96 @@
+/**
+ * Array based storage for Resumes
+ */
+public class ArrayStorage {
+    Resume[] storage = new Resume[100000];
+    int size;
+
+    void clear() {
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
+        }
+    }
+
+    void save(Resume r) {
+        if(isNotPresent(r.uuid)) {
+            storage[getFirstEmptyCellIndex()] = r;
+            size++;
+        } else {
+            System.out.printf("Resume(uuid=%s) is already present in storage. It may be updated only.%n", r.uuid);
+        }
+    }
+
+    void update(Resume r) {
+        if(isPresent(r.uuid)) {
+            storage[getExistingResumeIndexById(r.uuid)] = r;
+        } else {
+            System.out.printf("Resume(uuid=%s) is not present in storage. Please, add it.%n", r.uuid);
+        }
+    }
+
+    private int getFirstEmptyCellIndex() {
+        for (int i = 0; i < size; i++) {
+            if (null == storage[i].uuid) {
+                return i;
+            }
+        }
+        System.out.println("Storage is full, return last element index");
+        return size - 1;
+    }
+
+    Resume get(String uuid) {
+        if (isPresent(uuid)) {
+            return getExistingResumeById(uuid);
+        }
+        System.out.printf("Resume(uuid=%s) is not present in storage. Return null.%n", uuid);
+        return null;
+    }
+
+    void delete(String uuid) {
+        if (isNotPresent(uuid)) {
+            System.out.printf("Delete impossible. Resume(uuid=%s) is not present in storage%n", uuid);
+            return;
+        }
+        int indexToDelete = getExistingResumeIndexById(uuid);
+        storage[indexToDelete] = storage[size - 1];
+        storage[size - 1] = null;
+        size--;
+    }
+
+    /**
+     * @return array, contains only Resumes in storage (without null)
+     */
+    Resume[] getAll() {
+        return storage.clone();
+    }
+
+    int size() {
+        return size;
+    }
+
+    private boolean isNotPresent(String uuid) {
+        return !isPresent(uuid);
+    }
+    private boolean isPresent(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Resume getExistingResumeById(String uuid) {
+        return storage[getExistingResumeIndexById(uuid)];
+    }
+    private int getExistingResumeIndexById(String uuid) {
+        int index = 0;
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+}
