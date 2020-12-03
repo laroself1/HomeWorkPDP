@@ -29,24 +29,6 @@ public class ArrayStorage {
         }
     }
 
-    private int getFirstNullCellIndex() {
-        for (int i = 0; i < size; i++) {
-            if (null == storage[i].uuid) {
-                return i;
-            }
-        }
-        System.out.println("Storage is full, return last element index");
-        return size - 1;
-    }
-
-    Resume get(String uuid) {
-        if (isPresent(uuid)) {
-            return getExistingResumeById(uuid);
-        }
-        System.out.printf("Resume(uuid=%s) is not present in storage. Return null.%n", uuid);
-        return null;
-    }
-
     void delete(String uuid) {
         if (isNotPresent(uuid)) {
             System.out.printf("Delete impossible. Resume(uuid=%s) is not present in storage%n", uuid);
@@ -58,9 +40,14 @@ public class ArrayStorage {
         size--;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
+    Resume get(String uuid) {
+        if (isPresent(uuid)) {
+            return getExistingResumeById(uuid);
+        }
+        System.out.printf("Resume(uuid=%s) is not present in storage. Return null.%n", uuid);
+        return null;
+    }
+
     Resume[] getAll() {
         int cropTo = getFirstNullCellIndex();
         if (cropTo >= 0) {
@@ -78,6 +65,7 @@ public class ArrayStorage {
     private boolean isNotPresent(String uuid) {
         return !isPresent(uuid);
     }
+
     private boolean isPresent(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
@@ -90,6 +78,7 @@ public class ArrayStorage {
     private Resume getExistingResumeById(String uuid) {
         return storage[getExistingResumeIndexById(uuid)];
     }
+
     private int getExistingResumeIndexById(String uuid) {
         int index = 0;
         for (int i = 0; i < size; i++) {
@@ -99,5 +88,15 @@ public class ArrayStorage {
             }
         }
         return index;
+    }
+
+    private int getFirstNullCellIndex() {
+        for (int i = 0; i < size; i++) {
+            if (null == storage[i].uuid) {
+                return i;
+            }
+        }
+        System.out.println("Storage is full, return last element index");
+        return size - 1;
     }
 }
