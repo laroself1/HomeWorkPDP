@@ -9,11 +9,12 @@ public class ArrayStorage {
         for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
         if(isNotPresent(r.uuid)) {
-            storage[getFirstEmptyCellIndex()] = r;
+            storage[getFirstNullCellIndex()] = r;
             size++;
         } else {
             System.out.printf("Resume(uuid=%s) is already present in storage. It may be updated only.%n", r.uuid);
@@ -28,7 +29,7 @@ public class ArrayStorage {
         }
     }
 
-    private int getFirstEmptyCellIndex() {
+    private int getFirstNullCellIndex() {
         for (int i = 0; i < size; i++) {
             if (null == storage[i].uuid) {
                 return i;
@@ -61,7 +62,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return storage.clone();
+        int cropTo = getFirstNullCellIndex();
+        Resume[] resumes = new Resume[cropTo];
+        if (cropTo >= 0) System.arraycopy(storage, 0, resumes, 0, cropTo);
+        return resumes;
     }
 
     int size() {
