@@ -63,9 +63,12 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         int cropTo = getFirstNullCellIndex();
-        Resume[] resumes = new Resume[cropTo];
-        if (cropTo >= 0) System.arraycopy(storage, 0, resumes, 0, cropTo);
-        return resumes;
+        if (cropTo >= 0) {
+            Resume[] resumes = new Resume[cropTo];
+            System.arraycopy(storage, 0, resumes, 0, cropTo);
+            return resumes;
+        }
+        return storage.clone();
     }
 
     int size() {
