@@ -26,7 +26,7 @@ public class ArrayStorage {
             return;
         }
         if (isPresent(r.getUuid())) {
-            log.warning(String.format("Resume(uuid=%s) is already present in storage. It may be updated only.%n", r.getUuid()));
+            log.warning(String.format("Resume(uuid=%s) is already present in storage. It may be updated only.", r.getUuid()));
         } else {
             storage[size] = r;
             size++;
@@ -35,37 +35,39 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         Objects.requireNonNull(r);
-        if (isPresent(r.getUuid())) {
-            storage[getResumeIndexById(r.getUuid())] = r;
+        int index = getResumeIndexById(r.getUuid());
+        if (isPresent(index)) {
+            storage[index] = r;
         } else {
-            log.warning(String.format("Resume(uuid=%s) is not present in storage. Please, add it.%n", r.getUuid()));
+            log.warning(String.format("Resume(uuid=%s) is not present in storage. Please, add it.", r.getUuid()));
         }
     }
 
     public void delete(String uuid) {
         if (isEmpty(uuid)) {
-            log.warning(String.format("Delete impossible. Incorrect incoming parameter(uuid=%s)%n", uuid));
+            log.warning(String.format("Delete impossible. Incorrect incoming parameter(uuid=%s)", uuid));
             return;
         }
-        if (!isPresent(uuid)) {
-            log.warning(String.format("Delete impossible. Resume(uuid=%s) is not present in storage%n", uuid));
+        int index = getResumeIndexById(uuid);
+        if (!isPresent(index)) {
+            log.warning(String.format("Delete impossible. Resume(uuid=%s) is not present in storage", uuid));
             return;
         }
-        int indexToDelete = getResumeIndexById(uuid);
-        storage[indexToDelete] = storage[size - 1];
+        storage[index] = storage[size - 1];
         storage[size - 1] = null;
         size--;
     }
 
     public Resume get(String uuid) {
         if (isEmpty(uuid)) {
-            log.warning(String.format("Invalid input parameters, empty UUID%n", uuid));
+            log.warning(String.format("Invalid input parameters, empty UUID", uuid));
             return null;
         }
-        if (isPresent(uuid)) {
-            return storage[getResumeIndexById(uuid)];
+        int index = getResumeIndexById(uuid);
+        if (!isPresent(index)) {
+            return storage[index];
         }
-        log.warning(String.format("Resume(uuid=%s) is not present in storage. Return null.%n", uuid));
+        log.warning(String.format("Resume(uuid=%s) is not present in storage. Return null.", uuid));
         return null;
     }
 
@@ -83,6 +85,10 @@ public class ArrayStorage {
 
     private boolean isPresent(String uuid) {
         return getResumeIndexById(uuid) > NOT_EXISTING_INDEX;
+    }
+
+    private boolean isPresent(int index) {
+        return index > NOT_EXISTING_INDEX;
     }
 
     private int getResumeIndexById(String uuid) {

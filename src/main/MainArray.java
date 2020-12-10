@@ -54,7 +54,7 @@ public class MainArray {
 
     private static void checkDelete(Resume r1) {
         arrayStorage.delete(r1.getUuid());
-        get(r1);
+        printAll();
     }
 
     private static void checkUpdate(Resume r1) {
