@@ -14,22 +14,30 @@ public class MainArray {
         Resume r2 = new Resume("uuid2");
         Resume r3 = new Resume("uuid3");
 
+        checkSave(r1, r2, r3);
+        checkGet(r1);
+        checkUpdate(r1);
+
+        log.info(String.format("Get r1: %s", arrayStorage.get(r1.getUuid())));
+        log.info(String.format("Size: %d", arrayStorage.size()));
+
+        printAll();
+
+        checkDelete(r1);
+        checkClear();
+
+        log.info(String.format("Size: %d", arrayStorage.size()));
+    }
+
+    private static void get(Resume r1) {
+        arrayStorage.get(r1.getUuid());
+    }
+
+    private static void checkSave(Resume r1, Resume r2, Resume r3) {
         arrayStorage.save(r1);
         arrayStorage.save(r2);
         arrayStorage.save(r3);
-
-        arrayStorage.update(r1);
-
-        log.info("Get r1: " + arrayStorage.get(r1.getUuid()));
-        log.info("Size: " + arrayStorage.size());
-
         printAll();
-        arrayStorage.delete(r1.getUuid());
-        printAll();
-        arrayStorage.clear();
-        printAll();
-
-        log.info("Size: " + arrayStorage.size());
     }
 
     static void printAll() {
@@ -37,5 +45,25 @@ public class MainArray {
         for (Resume r : arrayStorage.getAll()) {
             log.info(r.toString());
         }
+    }
+
+    private static void checkClear() {
+        arrayStorage.clear();
+        printAll();
+    }
+
+    private static void checkDelete(Resume r1) {
+        arrayStorage.delete(r1.getUuid());
+        get(r1);
+    }
+
+    private static void checkUpdate(Resume r1) {
+        r1.setTitle("Exomi");
+        arrayStorage.update(r1);
+        get(r1);
+    }
+
+    private static void checkGet(Resume r1) {
+        get(r1);
     }
 }

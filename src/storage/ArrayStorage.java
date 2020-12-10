@@ -7,7 +7,8 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 public class ArrayStorage {
-    private static final Logger log = Logger.getLogger("ArrayStorage Logger");
+    private static final Logger log = Logger.getLogger("ArrayStorage");
+    private static final int NOT_EXISTING_INDEX = -1;
 
     private static final int MAX_STORAGE_SIZE = 100000;
     private final Resume[] storage = new Resume[MAX_STORAGE_SIZE];
@@ -42,7 +43,11 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        if (isNotEmpty(uuid) && isPresent(uuid)) {
+        if (isEmpty(uuid)) {
+            log.warning(String.format("Delete impossible. Incorrect incoming parameter(uuid=%s)%n", uuid));
+            return;
+        }
+        if (!isPresent(uuid)) {
             log.warning(String.format("Delete impossible. Resume(uuid=%s) is not present in storage%n", uuid));
             return;
         }
@@ -53,8 +58,12 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (isNotEmpty(uuid) && isPresent(uuid)) {
-            return getExistingResumeById(uuid);
+        if (isEmpty(uuid)) {
+            log.warning(String.format("Invalid input parameters, empty UUID%n", uuid));
+            return null;
+        }
+        if (isPresent(uuid)) {
+            return storage[getResumeIndexById(uuid)];
         }
         log.warning(String.format("Resume(uuid=%s) is not present in storage. Return null.%n", uuid));
         return null;
@@ -68,17 +77,12 @@ public class ArrayStorage {
         return size;
     }
 
-    private boolean isNotEmpty(String uuid) {
-        return uuid != null && !uuid.isEmpty();
+    private boolean isEmpty(String uuid) {
+        return uuid == null || uuid.isEmpty();
     }
 
     private boolean isPresent(String uuid) {
-        return get(uuid) != null;
-    }
-
-
-    private Resume getExistingResumeById(String uuid) {
-        return storage[getResumeIndexById(uuid)];
+        return getResumeIndexById(uuid) > NOT_EXISTING_INDEX;
     }
 
     private int getResumeIndexById(String uuid) {
@@ -87,7 +91,7 @@ public class ArrayStorage {
                 return i;
             }
         }
-        return -1;
+        return NOT_EXISTING_INDEX;
     }
 
 }
