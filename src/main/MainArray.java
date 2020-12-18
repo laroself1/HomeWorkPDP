@@ -10,30 +10,27 @@ public class MainArray {
     static ArrayStorage arrayStorage = new ArrayStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("uuid1");
-        Resume r2 = new Resume("uuid2");
-        Resume r3 = new Resume("uuid3");
+        Resume r1 = new Resume("dghd-67d8-dd", "Developer-CV");
+        Resume r2 = new Resume("nbsn-8s74-bd", "Manager-CV");
+        Resume r3 = new Resume("kshs-4432-sn", "Admin-CV");
 
         checkSave(r1, r2, r3);
+
         checkGet(r1);
+
         checkUpdate(r1);
 
-        log.info(String.format("Get r1: %s", arrayStorage.get(r1.getUuid())));
-        log.info(String.format("Size: %d", arrayStorage.size()));
-
-        printAll();
-
         checkDelete(r1);
-        checkClear();
 
-        log.info(String.format("Size: %d", arrayStorage.size()));
+        checkClear();
     }
 
-    private static void get(Resume r1) {
-        arrayStorage.get(r1.getUuid());
+    private static Resume get(Resume r1) {
+        return arrayStorage.get(r1.getUuid());
     }
 
     private static void checkSave(Resume r1, Resume r2, Resume r3) {
+        log.info("--------------Save-----------------");
         arrayStorage.save(r1);
         arrayStorage.save(r2);
         arrayStorage.save(r3);
@@ -48,22 +45,29 @@ public class MainArray {
     }
 
     private static void checkClear() {
+        log.info("--------------Clear-----------------");
         arrayStorage.clear();
         printAll();
     }
 
     private static void checkDelete(Resume r1) {
+        log.info("--------------Delete-----------------");
+        log.info(String.format("Updating resume %s", r1));
         arrayStorage.delete(r1.getUuid());
         printAll();
     }
 
     private static void checkUpdate(Resume r1) {
-        r1.setTitle("Exomi");
+        log.info("--------------Update-----------------");
+        log.info(String.format("Updating resume %s", r1));
+        r1.setTitle("Devops-CV");
         arrayStorage.update(r1);
-        get(r1);
+        log.info(String.format("Updated resume %s", get(r1)));
     }
 
     private static void checkGet(Resume r1) {
-        get(r1);
+        log.info("--------------Get-----------------");
+        Resume resume = get(r1);
+        log.info(String.format("Got resume %s", get(r1)));
     }
 }

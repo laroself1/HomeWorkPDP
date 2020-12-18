@@ -15,7 +15,7 @@ public class ArrayStorage {
     private int size;
 
     public void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
@@ -36,7 +36,7 @@ public class ArrayStorage {
     public void update(Resume r) {
         Objects.requireNonNull(r);
         int index = getResumeIndexById(r.getUuid());
-        if (isPresent(index)) {
+        if (isValidIndex(index)) {
             storage[index] = r;
         } else {
             log.warning(String.format("Resume(uuid=%s) is not present in storage. Please, add it.", r.getUuid()));
@@ -49,13 +49,14 @@ public class ArrayStorage {
             return;
         }
         int index = getResumeIndexById(uuid);
-        if (!isPresent(index)) {
+        if (isValidIndex(index)) {
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+        } else {
             log.warning(String.format("Delete impossible. Resume(uuid=%s) is not present in storage", uuid));
-            return;
         }
-        storage[index] = storage[size - 1];
-        storage[size - 1] = null;
-        size--;
+
     }
 
     public Resume get(String uuid) {
@@ -64,7 +65,7 @@ public class ArrayStorage {
             return null;
         }
         int index = getResumeIndexById(uuid);
-        if (!isPresent(index)) {
+        if (isValidIndex(index)) {
             return storage[index];
         }
         log.warning(String.format("Resume(uuid=%s) is not present in storage. Return null.", uuid));
@@ -72,7 +73,7 @@ public class ArrayStorage {
     }
 
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     public int size() {
@@ -87,7 +88,7 @@ public class ArrayStorage {
         return getResumeIndexById(uuid) > NOT_EXISTING_INDEX;
     }
 
-    private boolean isPresent(int index) {
+    private boolean isValidIndex(int index) {
         return index > NOT_EXISTING_INDEX;
     }
 

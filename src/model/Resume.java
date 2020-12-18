@@ -5,6 +5,15 @@ public class Resume {
     private final String uuid;
     private String title;
 
+    public Resume(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Resume(String uuid, String title) {
+        this.uuid = uuid;
+        this.title = title;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -13,14 +22,9 @@ public class Resume {
         this.title = title;
     }
 
-    public Resume(String uuid) {
-        this.uuid = uuid;
-    }
-
     public String getUuid() {
         return uuid;
     }
-
 
     @Override
     public String toString() {
