@@ -12,10 +12,9 @@ public abstract class ArrayStorage implements Storage {
     protected static final int NOT_EXISTING_INDEX = -1;
     protected static final int MAX_STORAGE_SIZE = 100000;
 
-    protected final Logger log = Logger.getLogger(getClass().getSimpleName());
+    private static final Logger log = Logger.getLogger(ArrayStorage.class.getSimpleName());
 
     protected Resume[] storage;
-
 
     protected ArrayStorage() {
         this.storage = new Resume[MAX_STORAGE_SIZE];
@@ -32,16 +31,14 @@ public abstract class ArrayStorage implements Storage {
     @Override
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        if (size == MAX_STORAGE_SIZE) {
-            logStorageMaxLimit();
-            return;
-        }
-        if (isPresent(r.getUuid())) {
-            logSavePresentError(r.getUuid());
-        } else {
+        if (hasFreeSpace()) {
             int indexToStoreAt = getResumeIndex(r.getUuid());
-            store(r, indexToStoreAt);
-            size++;
+            if (isValidIndex(indexToStoreAt)) {
+                log.log(WARNING, "Resume(uuid={0}) is already present in storage. It may be updated only.", r.getUuid());
+            } else {
+                store(r, indexToStoreAt);
+                size++;
+            }
         }
     }
 
@@ -58,10 +55,7 @@ public abstract class ArrayStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        if (isEmpty(uuid)) {
-            logNotFound(uuid);
-            return;
-        }
+        Objects.requireNonNull(uuid);
         int index = getResumeIndex(uuid);
         if (isValidIndex(index)) {
             erase(index);
@@ -69,15 +63,10 @@ public abstract class ArrayStorage implements Storage {
         } else {
             logNotFound(uuid);
         }
-
     }
 
     @Override
     public Resume get(String uuid) {
-        if (isEmpty(uuid)) {
-            logEmptyUUID();
-            return null;
-        }
         int index = getResumeIndex(uuid);
         if (isValidIndex(index)) {
             return storage[index];
@@ -86,20 +75,8 @@ public abstract class ArrayStorage implements Storage {
         return null;
     }
 
-    protected void logEmptyUUID() {
-        log.log(WARNING, "Invalid input parameters, empty UUID");
-    }
-
     protected void logNotFound(String uuid) {
         log.log(WARNING, "Resume(uuid={0}) was not found", uuid);
-    }
-
-    private void logStorageMaxLimit() {
-        log.log(WARNING,"Storage max limit is reached. Please, clear storage to add new elements.");
-    }
-
-    protected void logSavePresentError(String uuid) {
-        log.log(WARNING, "Resume(uuid={0}) is already present in storage. It may be updated only.", uuid);
     }
 
     @Override
@@ -111,16 +88,16 @@ public abstract class ArrayStorage implements Storage {
         return size;
     }
 
-    private boolean isEmpty(String uuid) {
-        return uuid == null || uuid.isEmpty();
-    }
-
-    private boolean isPresent(String uuid) {
-        return getResumeIndex(uuid) > NOT_EXISTING_INDEX;
-    }
-
     private boolean isValidIndex(int index) {
         return index > NOT_EXISTING_INDEX;
+    }
+
+    private boolean hasFreeSpace() {
+        if (size == MAX_STORAGE_SIZE) {
+            log.log(WARNING, "Storage max limit is reached. Please, clear storage to add new elements.");
+            return false;
+        }
+        return true;
     }
 
     protected abstract int getResumeIndex(String uuid);

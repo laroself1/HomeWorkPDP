@@ -15,7 +15,7 @@ public class SortedArrayStorage extends ArrayStorage {
 
     @Override
     protected void store(Resume r, int index) {
-        int storeIndex = (-index) - 1;
+        int storeIndex = -index - 1;
         System.arraycopy(storage, storeIndex, storage, storeIndex + 1, size - storeIndex);
         storage[storeIndex] = r;
     }
