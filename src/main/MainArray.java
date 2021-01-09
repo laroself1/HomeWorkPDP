@@ -1,15 +1,53 @@
 package main;
 
 import model.Resume;
-import storage.ArrayStorage;
+import storage.Storage;
+import storage.simple.SimpleArrayStorage;
+import storage.sorted.SortedArrayStorage;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainArray {
     private static final Logger log = Logger.getLogger("MainArray Logger");
-    static ArrayStorage arrayStorage = new ArrayStorage();
+    static Storage sortedStorage = new SortedArrayStorage();
+    static Storage simpleStorage = new SimpleArrayStorage();
 
     public static void main(String[] args) {
+        testSortedStorage();
+        testSimpleStorage();
+    }
+
+    private static void testSortedStorage() {
+        Resume r1 = new Resume("aaaaa", "Developer-CV");
+        Resume r2 = new Resume("bbbbb", "Manager-CV");
+        Resume r3 = new Resume("ccccc", "Admin-CV");
+
+        sortedStorage.save(r1);
+        sortedStorage.save(r2);
+        sortedStorage.save(r3);
+
+        log.info("--------------Get-----------------");
+        Resume resume = sortedStorage.get(r1.getUuid());
+        log.log(Level.INFO, "Printing Resume: {0}", resume);
+
+        log.info("--------------Update-----------------");
+        r1.setTitle("Updated Title");
+        sortedStorage.update(r1);
+        Resume updatedResume = sortedStorage.get(r1.getUuid());
+        log.log(Level.INFO, "Printing Resume: {0}", updatedResume);
+
+        log.info("--------------Delete-----------------");
+        sortedStorage.delete(r1.getUuid());
+        Resume deletedResume = sortedStorage.get(r1.getUuid());
+        log.log(Level.INFO, "Printing deleted Resume: {0}", deletedResume);
+
+        log.info("--------------Clear-----------------");
+        sortedStorage.clear();
+        printAll(sortedStorage);
+    }
+
+    private static void testSimpleStorage() {
         Resume r1 = new Resume("dghd-67d8-dd", "Developer-CV");
         Resume r2 = new Resume("nbsn-8s74-bd", "Manager-CV");
         Resume r3 = new Resume("kshs-4432-sn", "Admin-CV");
@@ -26,48 +64,49 @@ public class MainArray {
     }
 
     private static Resume get(Resume r1) {
-        return arrayStorage.get(r1.getUuid());
+        return simpleStorage.get(r1.getUuid());
     }
 
     private static void checkSave(Resume r1, Resume r2, Resume r3) {
         log.info("--------------Save-----------------");
-        arrayStorage.save(r1);
-        arrayStorage.save(r2);
-        arrayStorage.save(r3);
-        printAll();
+        simpleStorage.save(r1);
+        simpleStorage.save(r2);
+        simpleStorage.save(r3);
+        printAll(simpleStorage);
     }
 
-    static void printAll() {
+    static void printAll(Storage storage) {
         log.info("Get All");
-        for (Resume r : arrayStorage.getAll()) {
-            log.info(r.toString());
+        for (Resume r : storage.getAll()) {
+            log.log(Level.INFO, "Printing Resume: {0}", r);
         }
+         log.log(Level.INFO, "Array size: {0}", simpleStorage.size());
     }
 
     private static void checkClear() {
         log.info("--------------Clear-----------------");
-        arrayStorage.clear();
-        printAll();
+        simpleStorage.clear();
+        printAll(simpleStorage);
     }
 
     private static void checkDelete(Resume r1) {
         log.info("--------------Delete-----------------");
-        log.info(String.format("Updating resume %s", r1));
-        arrayStorage.delete(r1.getUuid());
-        printAll();
+        log.log(Level.INFO, "Updating resume {0}", r1);
+        simpleStorage.delete(r1.getUuid());
+        printAll(simpleStorage);
     }
 
     private static void checkUpdate(Resume r1) {
         log.info("--------------Update-----------------");
-        log.info(String.format("Updating resume %s", r1));
+        log.log(Level.INFO,"Updating resume {0}", r1);
         r1.setTitle("Devops-CV");
-        arrayStorage.update(r1);
-        log.info(String.format("Updated resume %s", get(r1)));
+        simpleStorage.update(r1);
+        log.log(Level.INFO,"Updated resume {0}", get(r1));
     }
 
     private static void checkGet(Resume r1) {
         log.info("--------------Get-----------------");
         Resume resume = get(r1);
-        log.info(String.format("Got resume %s", get(r1)));
+        log.log(Level.INFO, "Printing Resume: {0}", resume);
     }
 }
