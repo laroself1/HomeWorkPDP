@@ -5,6 +5,10 @@ import storage.ArrayStorage;
 
 public class SimpleArrayStorage extends ArrayStorage {
 
+    public SimpleArrayStorage(int size) {
+        super(size);
+    }
+
     @Override
     protected int getResumeIndex(String uuid) {
         for (int i = 0; i < size; i++) {

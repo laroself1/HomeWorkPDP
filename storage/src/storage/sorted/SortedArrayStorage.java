@@ -7,6 +7,10 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends ArrayStorage {
 
+    public SortedArrayStorage(int size) {
+        super(size);
+    }
+
     @Override
     protected int getResumeIndex(String uuid) {
         Resume resume = new Resume(uuid);
