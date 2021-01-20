@@ -26,9 +26,9 @@ abstract class ArrayStorageTest {
 
     @BeforeEach
     void addResumes() {
-        testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV"));
         testInstance.save(new Resume(UUID_MANAGER_CV, "Manager-CV"));
         testInstance.save(new Resume(UUID_ADMIN_CV, "Admin-CV"));
+        testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV"));
     }
 
     @AfterEach
@@ -104,6 +104,18 @@ abstract class ArrayStorageTest {
         Assertions.assertThrows(ResumeNotFoundException.class, () -> testInstance.update(notStoredInStorageResume));
     }
 
-
+    @Test
+    void getAll_returnsAllResumes() {
+        Resume[] expected = new Resume[] {
+                new Resume(UUID_MANAGER_CV, "Manager-CV"),
+                new Resume(UUID_ADMIN_CV, "Admin-CV"),
+                new Resume(UUID_DEV_CV, "Developer-CV")
+        };
+        Resume[] actual = testInstance.getAll();
+        for (int i = 0; i < expected.length; i++) {
+            Assertions.assertEquals(expected[i], actual[i]);
+        }
+        Assertions.assertEquals(expected.length, actual.length);
+    }
 
 }
