@@ -11,6 +11,9 @@ public class SortedArrayStorage extends ArrayStorage {
         super(size);
     }
 
+    public SortedArrayStorage() {
+    }
+
     @Override
     protected int getResumeIndex(String uuid) {
         Resume resume = new Resume(uuid);
