@@ -80,7 +80,7 @@ public class MainArray {
         for (Resume r : storage.getAll()) {
             log.log(Level.INFO, "Printing Resume: {0}", r);
         }
-         log.log(Level.INFO, "Array size: {0}", simpleStorage.size());
+        log.log(Level.INFO, "Array size: {0}", simpleStorage.size());
     }
 
     private static void checkClear() {

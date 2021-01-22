@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Resume implements Comparable<Resume>{
 
@@ -14,6 +15,10 @@ public class Resume implements Comparable<Resume>{
     public Resume(String uuid, String title) {
         this.uuid = uuid;
         this.title = title;
+    }
+
+    public Resume() {
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public String getTitle() {
