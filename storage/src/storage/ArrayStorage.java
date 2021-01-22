@@ -11,24 +11,25 @@ import java.util.Objects;
 public abstract class ArrayStorage implements Storage {
     protected static final int NOT_EXISTING_INDEX = -1;
     protected static final int DEFAULT_MAX_STORAGE_SIZE = 100000;
-    protected int maxSize;
-    protected int size;
+    protected int maximumSize;
+    protected int currentSize;
 
     protected Resume[] storage;
 
-    public ArrayStorage() {
-        maxSize = DEFAULT_MAX_STORAGE_SIZE;
+    protected ArrayStorage() {
+        this.storage = new Resume[DEFAULT_MAX_STORAGE_SIZE];
+        maximumSize = DEFAULT_MAX_STORAGE_SIZE;
     }
 
-    protected ArrayStorage(int size) {
-        this.storage = new Resume[size];
-        this.maxSize = size;
+    protected ArrayStorage(int storageMaxSize) {
+        this.storage = new Resume[storageMaxSize];
+        this.maximumSize = storageMaxSize;
     }
 
     @Override
     public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
+        Arrays.fill(storage, 0, currentSize, null);
+        currentSize = 0;
     }
 
     @Override
@@ -39,7 +40,7 @@ public abstract class ArrayStorage implements Storage {
         validateResumeIsNotPresent(indexToStoreAt, r.getUuid());
 
         store(r, indexToStoreAt);
-        size++;
+        currentSize++;
     }
 
     @Override
@@ -58,7 +59,7 @@ public abstract class ArrayStorage implements Storage {
         validateResumeIsPresent(index, uuid);
 
         erase(index);
-        size--;
+        currentSize--;
     }
 
     @Override
@@ -71,15 +72,15 @@ public abstract class ArrayStorage implements Storage {
 
     @Override
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        return Arrays.copyOfRange(storage, 0, currentSize);
     }
 
     public int size() {
-        return size;
+        return currentSize;
     }
 
     private void validateFreeSpacePresence() {
-        if (size == maxSize) {
+        if (currentSize == maximumSize) {
             throw new FullStorageException("Storage max limit is reached. Please, clear storage to add new elements.");
         }
     }

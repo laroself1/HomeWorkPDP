@@ -17,19 +17,19 @@ public class SortedArrayStorage extends ArrayStorage {
     @Override
     protected int getResumeIndex(String uuid) {
         Resume resume = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, resume);
+        return Arrays.binarySearch(storage, 0, currentSize, resume);
     }
 
     @Override
     protected void store(Resume r, int index) {
         int storeIndex = -index - 1;
-        System.arraycopy(storage, storeIndex, storage, storeIndex + 1, size - storeIndex);
+        System.arraycopy(storage, storeIndex, storage, storeIndex + 1, currentSize - storeIndex);
         storage[storeIndex] = r;
     }
 
     @Override
     protected void erase(int index) {
-        int erasedIndex = size - index - 1;
+        int erasedIndex = currentSize - index - 1;
         if (erasedIndex > 0) {
             System.arraycopy(storage, index + 1, storage, index, erasedIndex);
         }
