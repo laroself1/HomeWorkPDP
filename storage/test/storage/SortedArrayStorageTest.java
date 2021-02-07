@@ -1,6 +1,6 @@
 package storage;
 
-import storage.sorted.SortedArrayStorage;
+import storage.array.sorted.SortedArrayStorage;
 
 public class SortedArrayStorageTest extends ArrayStorageTest {
 

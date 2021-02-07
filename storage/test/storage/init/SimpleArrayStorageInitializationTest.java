@@ -1,6 +1,6 @@
 package storage.init;
 
-import storage.simple.SimpleArrayStorage;
+import storage.array.simple.SimpleArrayStorage;
 
 public class SimpleArrayStorageInitializationTest extends ArrayStorageInitializationTest {
     public SimpleArrayStorageInitializationTest() {

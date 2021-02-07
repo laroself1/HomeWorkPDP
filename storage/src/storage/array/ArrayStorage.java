@@ -1,20 +1,19 @@
-package storage;
+package storage.array;
 
 import model.Resume;
+import storage.AbstractStorage;
 import storage.exception.FullStorageException;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
 import java.util.Arrays;
-import java.util.Objects;
 
-public abstract class ArrayStorage implements Storage {
-    protected static final int NOT_EXISTING_INDEX = -1;
+public abstract class ArrayStorage extends AbstractStorage {
     protected static final int DEFAULT_MAX_STORAGE_SIZE = 100000;
     protected int maximumSize;
     protected int currentSize;
 
-    protected Resume[] storage;
+    protected final Resume[] storage;
 
     protected ArrayStorage() {
         this.storage = new Resume[DEFAULT_MAX_STORAGE_SIZE];
@@ -27,55 +26,41 @@ public abstract class ArrayStorage implements Storage {
     }
 
     @Override
-    public void clear() {
+    protected void removeAll() {
         Arrays.fill(storage, 0, currentSize, null);
         currentSize = 0;
     }
 
     @Override
-    public void save(Resume r) {
-        Objects.requireNonNull(r);
+    public void store(Object key, Resume r) {
         validateFreeSpacePresence();
-        int indexToStoreAt = getResumeIndex(r.getUuid());
-        validateResumeIsNotPresent(indexToStoreAt, r.getUuid());
-
-        store(r, indexToStoreAt);
+        store(r, (int) key);
         currentSize++;
     }
 
     @Override
-    public void update(Resume r) {
-        Objects.requireNonNull(r);
-        int index = getResumeIndex(r.getUuid());
-        validateResumeIsPresent(index, r.getUuid());
-
-        storage[index] = r;
+    public void renew(Object key, Resume r) {
+        storage[(int) key] = r;
     }
 
     @Override
-    public void delete(String uuid) {
-        Objects.requireNonNull(uuid);
-        int index = getResumeIndex(uuid);
-        validateResumeIsPresent(index, uuid);
-
-        erase(index);
+    public void remove(Object key) {
+        erase((int) key);
         currentSize--;
     }
 
     @Override
-    public Resume get(String uuid) {
-        int index = getResumeIndex(uuid);
-        validateResumeIsPresent(index, uuid);
-
-        return storage[index];
+    public Resume find(Object key) {
+        return storage[(int) key];
     }
 
     @Override
-    public Resume[] getAll() {
+    public Resume[] findAll() {
         return Arrays.copyOfRange(storage, 0, currentSize);
     }
 
-    public int size() {
+
+    public int length() {
         return currentSize;
     }
 
@@ -85,11 +70,24 @@ public abstract class ArrayStorage implements Storage {
         }
     }
 
+    @Override
+    protected Object tryGetNotExistingResumeStoringKey(Resume r) {
+        int indexToStoreAt = getResumeIndex(r.getUuid());
+        validateResumeIsNotPresent(indexToStoreAt, r.getUuid());
+        return indexToStoreAt;
+    }
+
     private void validateResumeIsNotPresent(int indexToStoreAt, String uuid) {
         if (isValidIndex(indexToStoreAt)) {
-            String message = String.format("Resume(uuid={%s}) is already present in storage. It may be updated only.", uuid);
-            throw new ResumeAlreadyStoredException(message);
+            throw new ResumeAlreadyStoredException(uuid);
         }
+    }
+
+    @Override
+    protected Object tryGetExistingResumeKey(String uuid) {
+        int resumeIndex = getResumeIndex(uuid);
+        validateResumeIsPresent(resumeIndex, uuid);
+        return resumeIndex;
     }
 
     private void validateResumeIsPresent(int resumeIndex, String uuid) {
@@ -102,9 +100,10 @@ public abstract class ArrayStorage implements Storage {
         return index > NOT_EXISTING_INDEX;
     }
 
+
     protected abstract int getResumeIndex(String uuid);
 
-    protected abstract void store(Resume r, int index);
+    protected abstract void store(Resume r, Integer index);
 
     protected abstract void erase(int index);
 }

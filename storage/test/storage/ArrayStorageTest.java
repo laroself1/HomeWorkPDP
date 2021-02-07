@@ -12,13 +12,13 @@ import storage.exception.ResumeNotFoundException;
 abstract class ArrayStorageTest {
     protected static final int MAX_TEST_STORAGE_SIZE = 4;
 
-    private static final String UUID_DEV_CV = "ssj-34eh32";
-    private static final String UUID_MANAGER_CV = "ewo-232hsj";
-    private static final String UUID_ADMIN_CV = "qxb-238sdf";
+    static final String UUID_DEV_CV = "ssj-34eh32";
+    static final String UUID_MANAGER_CV = "ewo-232hsj";
+    static final String UUID_ADMIN_CV = "qxb-238sdf";
 
     Resume notStoredInStorageResume = new Resume("123", "Alan");
 
-    private final Storage testInstance;
+    final Storage testInstance;
 
     public ArrayStorageTest(Storage testInstance) {
         this.testInstance = testInstance;
@@ -67,7 +67,7 @@ abstract class ArrayStorageTest {
 
     @Test
     void save_throwsResumeIsAlreadyStoredException() {
-        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(new Resume(UUID_DEV_CV)));
+        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV")));
     }
 
     @Test
