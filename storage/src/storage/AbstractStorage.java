@@ -8,49 +8,32 @@ public abstract class AbstractStorage implements Storage {
     protected static final int NOT_EXISTING_INDEX = -1;
 
     @Override
-    public void clear() {
-        removeAll();
-    }
-
-    @Override
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        Object key = tryGetNotExistingResumeStoringKey(r);
+        Object key = getKeyIfNotExists(r);
         store(key, r);
     }
 
     @Override
     public void update(Resume r) {
         Objects.requireNonNull(r);
-        Object key = tryGetExistingResumeKey(r.getUuid());
+        Object key = getKeyIfExists(r.getUuid());
         renew(key, r);
     }
 
     @Override
     public void delete(String uuid) {
         Objects.requireNonNull(uuid);
-        Object key = tryGetExistingResumeKey(uuid);
+        Object key = getKeyIfExists(uuid);
         remove(key);
     }
 
     @Override
     public Resume get(String uuid) {
         Objects.requireNonNull(uuid);
-        Object key = tryGetExistingResumeKey(uuid);
+        Object key = getKeyIfExists(uuid);
         return find(key);
     }
-
-    @Override
-    public Resume[] getAll() {
-        return findAll();
-    }
-
-    @Override
-    public int size() {
-        return length();
-    }
-
-    protected abstract void removeAll();
 
     protected abstract void store(Object key, Resume r);
 
@@ -60,12 +43,8 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Resume find(Object key);
 
-    protected abstract Resume[] findAll();
+    protected abstract Object getKeyIfNotExists(Resume r);
 
-    protected abstract int length();
-
-    protected abstract Object tryGetNotExistingResumeStoringKey(Resume r);
-
-    protected abstract Object tryGetExistingResumeKey(String uuid);
+    protected abstract Object getKeyIfExists(String uuid);
 
 }

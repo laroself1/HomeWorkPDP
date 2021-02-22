@@ -5,15 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import storage.map.MapStorage;
 
-public class HashMapStorageTest extends ArrayStorageTest {
+public class HashMapStorageTest extends AbstractStorageTest {
 
     public HashMapStorageTest() {
         super(new MapStorage());
-    }
-
-    @Override
-    void save_throwsAddToFullStorageException() {
-        //No storage limit logic should be present for MapStorage
     }
 
     @Test

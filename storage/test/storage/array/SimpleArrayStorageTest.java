@@ -1,4 +1,4 @@
-package storage;
+package storage.array;
 
 import storage.array.simple.SimpleArrayStorage;
 

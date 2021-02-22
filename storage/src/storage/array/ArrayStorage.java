@@ -26,7 +26,7 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void removeAll() {
+    public void clear() {
         Arrays.fill(storage, 0, currentSize, null);
         currentSize = 0;
     }
@@ -55,12 +55,12 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] findAll() {
+    public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, currentSize);
     }
 
-
-    public int length() {
+    @Override
+    public int size() {
         return currentSize;
     }
 
@@ -71,7 +71,7 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object tryGetNotExistingResumeStoringKey(Resume r) {
+    protected Object getKeyIfNotExists(Resume r) {
         int indexToStoreAt = getResumeIndex(r.getUuid());
         validateResumeIsNotPresent(indexToStoreAt, r.getUuid());
         return indexToStoreAt;
@@ -84,7 +84,7 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object tryGetExistingResumeKey(String uuid) {
+    protected Object getKeyIfExists(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
         validateResumeIsPresent(resumeIndex, uuid);
         return resumeIndex;

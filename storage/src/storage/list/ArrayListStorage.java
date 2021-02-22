@@ -12,7 +12,7 @@ public class ArrayListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    public void removeAll() {
+    public void clear() {
         storage.clear();
     }
 
@@ -37,17 +37,17 @@ public class ArrayListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] findAll() {
-        return storage.toArray(new Resume[length()]);
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[size()]);
     }
 
     @Override
-    public int length() {
+    public int size() {
         return this.storage.size();
     }
 
     @Override
-    protected Object tryGetNotExistingResumeStoringKey(Resume r) {
+    protected Object getKeyIfNotExists(Resume r) {
         if (storage.contains(r)) {
             throw new ResumeAlreadyStoredException(r.getUuid());
         }
@@ -55,7 +55,7 @@ public class ArrayListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object tryGetExistingResumeKey(String uuid) {
+    protected Object getKeyIfExists(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
