@@ -47,18 +47,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getKeyIfNotExists(Resume r) {
-        if (storage.containsKey(r.getUuid())) {
-            throw new ResumeAlreadyStoredException(r.getUuid());
-        }
-        return r.getUuid();
+    protected boolean isKeyPresent(Object key) {
+        return storage.containsKey(key);
     }
 
     @Override
-    protected Object getKeyIfExists(String uuid) {
-        if (!storage.containsKey(uuid)) {
-            throw new ResumeNotFoundException(uuid);
-        }
+    protected Object getKey(String uuid) {
         return uuid;
     }
 }

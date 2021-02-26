@@ -15,7 +15,7 @@ public class SimpleArrayStorage extends ArrayStorage {
     }
 
     @Override
-    protected int getResumeIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         for (int i = 0; i < currentSize; i++) {
             if (uuid.equals(storage[i].getUuid())) {
                 return i;

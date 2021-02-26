@@ -16,7 +16,7 @@ public class SortedArrayStorage extends ArrayStorage {
     }
 
     @Override
-    protected int getResumeIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         Resume resume = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, currentSize, resume);
     }

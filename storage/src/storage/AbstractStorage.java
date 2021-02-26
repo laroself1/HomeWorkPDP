@@ -1,6 +1,8 @@
 package storage;
 
 import model.Resume;
+import storage.exception.ResumeAlreadyStoredException;
+import storage.exception.ResumeNotFoundException;
 
 import java.util.Objects;
 
@@ -10,7 +12,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        Object key = getKeyIfNotExists(r);
+        Object key = getKeyIfNotExists(r.getUuid());
         store(key, r);
     }
 
@@ -35,6 +37,26 @@ public abstract class AbstractStorage implements Storage {
         return find(key);
     }
 
+    private Object getKeyIfNotExists(String uuid) {
+        Object key = getKey(uuid);
+        if (isKeyPresent(key)) {
+            throw new ResumeAlreadyStoredException(uuid);
+        }
+        return key;
+    }
+
+    private Object getKeyIfExists(String uuid) {
+        Object key = getKey(uuid);
+        if (!isKeyPresent(key)) {
+            throw new ResumeNotFoundException(uuid);
+        }
+        return key;
+    }
+
+    protected abstract boolean isKeyPresent(Object key);
+
+    protected abstract Object getKey(String uuid);
+
     protected abstract void store(Object key, Resume r);
 
     protected abstract void renew(Object key, Resume r);
@@ -42,9 +64,4 @@ public abstract class AbstractStorage implements Storage {
     protected abstract void remove(Object key);
 
     protected abstract Resume find(Object key);
-
-    protected abstract Object getKeyIfNotExists(Resume r);
-
-    protected abstract Object getKeyIfExists(String uuid);
-
 }

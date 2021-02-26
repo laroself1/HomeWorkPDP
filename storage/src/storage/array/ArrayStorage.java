@@ -17,7 +17,7 @@ public abstract class ArrayStorage extends AbstractStorage {
 
     protected ArrayStorage() {
         this.storage = new Resume[DEFAULT_MAX_STORAGE_SIZE];
-        maximumSize = DEFAULT_MAX_STORAGE_SIZE;
+        this.maximumSize = DEFAULT_MAX_STORAGE_SIZE;
     }
 
     protected ArrayStorage(int storageMaxSize) {
@@ -71,39 +71,13 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getKeyIfNotExists(Resume r) {
-        int indexToStoreAt = getResumeIndex(r.getUuid());
-        validateResumeIsNotPresent(indexToStoreAt, r.getUuid());
-        return indexToStoreAt;
+    protected boolean isKeyPresent(Object key) {
+        return (Integer) key >= 0;
     }
-
-    private void validateResumeIsNotPresent(int indexToStoreAt, String uuid) {
-        if (isValidIndex(indexToStoreAt)) {
-            throw new ResumeAlreadyStoredException(uuid);
-        }
-    }
-
-    @Override
-    protected Object getKeyIfExists(String uuid) {
-        int resumeIndex = getResumeIndex(uuid);
-        validateResumeIsPresent(resumeIndex, uuid);
-        return resumeIndex;
-    }
-
-    private void validateResumeIsPresent(int resumeIndex, String uuid) {
-        if (!isValidIndex(resumeIndex)) {
-            throw new ResumeNotFoundException(uuid);
-        }
-    }
-
-    private boolean isValidIndex(int index) {
-        return index > NOT_EXISTING_INDEX;
-    }
-
-
-    protected abstract int getResumeIndex(String uuid);
 
     protected abstract void store(Resume r, Integer index);
 
     protected abstract void erase(int index);
+
+    protected abstract Integer getKey(String uuid);
 }
