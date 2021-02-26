@@ -5,22 +5,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import storage.exception.FullStorageException;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
-abstract class ArrayStorageTest {
+public abstract class AbstractStorageTest {
     protected static final int MAX_TEST_STORAGE_SIZE = 4;
 
-    private static final String UUID_DEV_CV = "ssj-34eh32";
-    private static final String UUID_MANAGER_CV = "ewo-232hsj";
-    private static final String UUID_ADMIN_CV = "qxb-238sdf";
+    static final String UUID_DEV_CV = "ssj-34eh32";
+    static final String UUID_MANAGER_CV = "ewo-232hsj";
+    static final String UUID_ADMIN_CV = "qxb-238sdf";
 
-    Resume notStoredInStorageResume = new Resume("123", "Alan");
+    protected static Resume NOT_STORED = new Resume("123", "Alan");
 
-    private final Storage testInstance;
+    protected final Storage testInstance;
 
-    public ArrayStorageTest(Storage testInstance) {
+    public AbstractStorageTest(Storage testInstance) {
         this.testInstance = testInstance;
     }
 
@@ -59,22 +58,15 @@ abstract class ArrayStorageTest {
     @Test
     void save_StoresResumeAndIncreasesSize() {
         int sizeBeforeSave = testInstance.size();
-        testInstance.save(notStoredInStorageResume);
+        testInstance.save(NOT_STORED);
         int sizeAfterSave = testInstance.size();
-        Assertions.assertEquals(notStoredInStorageResume, testInstance.get("123"));
+        Assertions.assertEquals(NOT_STORED, testInstance.get("123"));
         Assertions.assertEquals(sizeBeforeSave + 1, sizeAfterSave);
     }
 
     @Test
     void save_throwsResumeIsAlreadyStoredException() {
-        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(new Resume(UUID_DEV_CV)));
-    }
-
-    @Test
-    void save_throwsAddToFullStorageException() {
-        testInstance.save(notStoredInStorageResume);
-
-        Assertions.assertThrows(FullStorageException.class, () -> testInstance.save(new Resume("999")));
+        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV")));
     }
 
     @Test
@@ -88,7 +80,7 @@ abstract class ArrayStorageTest {
 
     @Test
     void deleteThrowsResumeNotFound_whenTryToDeleteNotStoredResume() {
-        Assertions.assertThrows(ResumeNotFoundException.class, () -> testInstance.delete(notStoredInStorageResume.getUuid()));
+        Assertions.assertThrows(ResumeNotFoundException.class, () -> testInstance.delete(NOT_STORED.getUuid()));
     }
 
     @Test
@@ -101,7 +93,7 @@ abstract class ArrayStorageTest {
 
     @Test
     void update_throwsResumeNotFoundException() {
-        Assertions.assertThrows(ResumeNotFoundException.class, () -> testInstance.update(notStoredInStorageResume));
+        Assertions.assertThrows(ResumeNotFoundException.class, () -> testInstance.update(NOT_STORED));
     }
 
     @Test

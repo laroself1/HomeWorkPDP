@@ -1,7 +1,8 @@
-package storage.sorted;
+package storage.array.sorted;
 
 import model.Resume;
-import storage.ArrayStorage;
+import storage.array.ArrayStorage;
+import storage.exception.ResumeNotFoundException;
 
 import java.util.Arrays;
 
@@ -15,13 +16,14 @@ public class SortedArrayStorage extends ArrayStorage {
     }
 
     @Override
-    protected int getResumeIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         Resume resume = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, currentSize, resume);
     }
 
+
     @Override
-    protected void store(Resume r, int index) {
+    protected void store(Resume r, Integer index) {
         int storeIndex = -index - 1;
         System.arraycopy(storage, storeIndex, storage, storeIndex + 1, currentSize - storeIndex);
         storage[storeIndex] = r;
@@ -34,5 +36,4 @@ public class SortedArrayStorage extends ArrayStorage {
             System.arraycopy(storage, index + 1, storage, index, erasedIndex);
         }
     }
-
 }

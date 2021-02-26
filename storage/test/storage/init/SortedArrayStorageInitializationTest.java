@@ -1,6 +1,6 @@
 package storage.init;
 
-import storage.sorted.SortedArrayStorage;
+import storage.array.sorted.SortedArrayStorage;
 
 public class SortedArrayStorageInitializationTest extends ArrayStorageInitializationTest{
     public SortedArrayStorageInitializationTest() {

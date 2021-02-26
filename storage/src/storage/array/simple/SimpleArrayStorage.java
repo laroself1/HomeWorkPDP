@@ -1,7 +1,9 @@
-package storage.simple;
+package storage.array.simple;
 
 import model.Resume;
-import storage.ArrayStorage;
+import storage.array.ArrayStorage;
+import storage.exception.ResumeAlreadyStoredException;
+import storage.exception.ResumeNotFoundException;
 
 public class SimpleArrayStorage extends ArrayStorage {
 
@@ -13,7 +15,7 @@ public class SimpleArrayStorage extends ArrayStorage {
     }
 
     @Override
-    protected int getResumeIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         for (int i = 0; i < currentSize; i++) {
             if (uuid.equals(storage[i].getUuid())) {
                 return i;
@@ -23,7 +25,7 @@ public class SimpleArrayStorage extends ArrayStorage {
     }
 
     @Override
-    protected void store(Resume r, int index) {
+    protected void store(Resume r, Integer index) {
         storage[currentSize] = r;
     }
 
@@ -32,5 +34,4 @@ public class SimpleArrayStorage extends ArrayStorage {
         storage[index] = storage[currentSize - 1];
         storage[currentSize - 1] = null;
     }
-
 }
