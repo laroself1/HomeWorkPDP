@@ -3,7 +3,10 @@ package storage.array;
 import model.Resume;
 import storage.AbstractStorage;
 import storage.exception.FullStorageException;
+import storage.exception.ResumeAlreadyStoredException;
+import storage.exception.ResumeNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

@@ -48,7 +48,14 @@ public class Resume implements Comparable<Resume>{
 
     @Override
     public int compareTo(Resume o) {
-        return this.uuid.compareTo(o.uuid);
+        int titlesDifference = 0;
+        if (this.title != null && o.title != null) {
+            titlesDifference = this.title.compareTo(o.getTitle());
+        }
+        if (titlesDifference == 0) {
+            return this.uuid.compareTo(o.uuid);
+        }
+        return titlesDifference;
     }
 
     @Override
