@@ -6,9 +6,7 @@ import storage.exception.FullStorageException;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class ArrayStorage extends AbstractStorage {
     protected static final int DEFAULT_MAX_STORAGE_SIZE = 100000;
@@ -57,8 +55,8 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> copyData() {
-        return Arrays.asList(Arrays.copyOfRange(storage, 0, currentSize));
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, currentSize);
     }
 
     @Override

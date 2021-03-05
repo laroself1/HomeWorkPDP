@@ -42,20 +42,8 @@ public class Resume implements Comparable<Resume>{
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(uuid, title);
-    }
-
-    @Override
     public int compareTo(Resume o) {
-        int titlesDifference = 0;
-        if (this.title != null && o.title != null) {
-            titlesDifference = this.title.compareTo(o.getTitle());
-        }
-        if (titlesDifference == 0) {
-            return this.uuid.compareTo(o.uuid);
-        }
-        return titlesDifference;
+        return this.uuid.compareTo(o.getUuid());
     }
 
     @Override
@@ -63,7 +51,11 @@ public class Resume implements Comparable<Resume>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) &&
-                Objects.equals(title, resume.title);
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(title, resume.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, title);
     }
 }

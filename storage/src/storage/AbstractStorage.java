@@ -4,8 +4,6 @@ import model.Resume;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractStorage implements Storage {
@@ -39,13 +37,6 @@ public abstract class AbstractStorage implements Storage {
         return find(key);
     }
 
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> resumes = copyData();
-        Collections.sort(resumes);
-        return resumes;
-    }
-
     private Object getKeyIfNotExists(String uuid) {
         Object key = getKey(uuid);
         if (isKeyPresent(key)) {
@@ -73,6 +64,4 @@ public abstract class AbstractStorage implements Storage {
     protected abstract void remove(Object key);
 
     protected abstract Resume find(Object key);
-
-    protected abstract List<Resume> copyData();
 }
