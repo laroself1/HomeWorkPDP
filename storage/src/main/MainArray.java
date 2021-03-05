@@ -78,7 +78,7 @@ public class MainArray {
 
     static void printAll(Storage storage) {
         log.info("Get All");
-        for (Resume r : storage.getAllSorted()) {
+        for (Resume r : storage.getAll()) {
             log.log(Level.INFO, "Printing Resume: {0}", r);
         }
         log.log(Level.INFO, "Array size: {0}", simpleStorage.size());

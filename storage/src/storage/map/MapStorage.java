@@ -5,9 +5,7 @@ import storage.AbstractStorage;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
@@ -39,8 +37,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> copyData() {
-        return new ArrayList<>(storage.values());
+    public Resume[] getAll() {
+        return storage.values().toArray(new Resume[size()]);
     }
 
     @Override

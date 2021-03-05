@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
-import java.util.List;
-
 public abstract class AbstractStorageTest {
     protected static final int MAX_TEST_STORAGE_SIZE = 4;
 
@@ -100,13 +98,16 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAll_returnsAllResumes() {
-        List<Resume> expected = List.of(
+        Resume[] expected = new Resume[] {
+                new Resume(UUID_MANAGER_CV, "Manager-CV"),
                 new Resume(UUID_ADMIN_CV, "Admin-CV"),
-                new Resume(UUID_DEV_CV, "Developer-CV"),
-                new Resume(UUID_MANAGER_CV, "Manager-CV")
-        );
-        List<Resume> actual = testInstance.getAllSorted();
-        Assertions.assertEquals(expected, actual);
+                new Resume(UUID_DEV_CV, "Developer-CV")
+        };
+        Resume[] actual = testInstance.getAll();
+        for (int i = 0; i < expected.length; i++) {
+            Assertions.assertEquals(expected[i], actual[i]);
+        }
+        Assertions.assertEquals(expected.length, actual.length);
     }
 
 }

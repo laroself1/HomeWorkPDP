@@ -50,8 +50,8 @@ public class ArrayListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> copyData() {
-        return new ArrayList<>(storage);
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[size()]);
     }
 
     @Override
