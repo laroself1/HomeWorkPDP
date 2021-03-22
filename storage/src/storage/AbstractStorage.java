@@ -13,8 +13,8 @@ public abstract class AbstractStorage<K> implements Storage {
 
     private static final Comparator<Resume> SORT_BY_NAMES_FIRST = (r1, r2) -> {
         int titlesDifference = 0;
-        if (r1.getTitle() != null && r2.getTitle() != null) {
-            titlesDifference = r1.getTitle().compareTo(r2.getTitle());
+        if (r1.getFullName() != null && r2.getFullName() != null) {
+            titlesDifference = r1.getFullName().compareTo(r2.getFullName());
         }
         if (titlesDifference == 0) {
             return r1.getUuid().compareTo(r2.getUuid());

@@ -64,8 +64,7 @@ public class MainArray {
 
     private static void testUpdate(Storage testedStorage) {
         log.info("--------------Update-----------------");
-        r1.setTitle("Updated Title");
-        testedStorage.update(r1);
+        testedStorage.update(new Resume(r1.getUuid(), "Updated Title"));
         Resume updatedResume = testedStorage.get(r1.getUuid());
         log.log(Level.INFO, "Printing Resume: {0}", updatedResume);
     }

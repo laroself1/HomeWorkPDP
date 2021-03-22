@@ -23,7 +23,7 @@ abstract class ArrayStorageInitializationTest {
 
         String title = "Title";
         testInstance.update(new Resume(resume.getUuid(), title));
-        String updatedTitle = testInstance.get(uuid).getTitle();
+        String updatedTitle = testInstance.get(uuid).getFullName();
 
         Assertions.assertEquals(resume, retrievedResume);
         Assertions.assertEquals(1, testInstance.size());

@@ -90,7 +90,7 @@ public abstract class AbstractStorageTest {
         String updatedTitle = "Developer-CV-updated";
         testInstance.update(new Resume(UUID_DEV_CV, updatedTitle));
 
-        Assertions.assertEquals(updatedTitle, testInstance.get(UUID_DEV_CV).getTitle());
+        Assertions.assertEquals(updatedTitle, testInstance.get(UUID_DEV_CV).getFullName());
     }
 
     @Test
