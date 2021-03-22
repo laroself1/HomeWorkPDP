@@ -7,7 +7,7 @@ import storage.exception.FullStorageException;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class ArrayStorage extends AbstractStorage {
+public abstract class ArrayStorage extends AbstractStorage<Integer> {
     protected static final int DEFAULT_MAX_STORAGE_SIZE = 100000;
     protected int maximumSize;
     protected int currentSize;
@@ -31,26 +31,26 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void store(Object key, Resume r) {
+    public void store(Integer key, Resume r) {
         validateFreeSpacePresence();
-        store(r, (int) key);
+        store(r, key);
         currentSize++;
     }
 
     @Override
-    public void renew(Object key, Resume r) {
-        storage[(int) key] = r;
+    public void renew(Integer key, Resume r) {
+        storage[key] = r;
     }
 
     @Override
-    public void remove(Object key) {
-        erase((int) key);
+    public void remove(Integer key) {
+        erase(key);
         currentSize--;
     }
 
     @Override
-    public Resume find(Object key) {
-        return storage[(int) key];
+    public Resume find(Integer key) {
+        return storage[key];
     }
 
     @Override
@@ -70,8 +70,8 @@ public abstract class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isKeyPresent(Object key) {
-        return (Integer) key >= 0;
+    protected boolean isKeyPresent(Integer key) {
+        return key >= 0;
     }
 
     protected abstract void store(Resume r, Integer index);
