@@ -1,6 +1,7 @@
 package main;
 
 import model.Resume;
+import service.FilePrintService;
 import storage.Storage;
 import storage.array.simple.SimpleArrayStorage;
 import storage.array.sorted.SortedArrayStorage;
@@ -23,10 +24,11 @@ public class MainArray {
     static Storage mapStorage = new MapStorage();
 
     public static void main(String[] args) {
-        testStorage(simpleStorage);
-        testStorage(sortedStorage);
-        testStorage(arrayListStorage);
-        testStorage(mapStorage);
+//        testStorage(simpleStorage);
+//        testStorage(sortedStorage);
+//        testStorage(arrayListStorage);
+//        testStorage(mapStorage);
+        new FilePrintService().printAllApplicationFiles("/Users/user/Desktop/JavaSE-app-HW1/storage/src");
     }
 
     private static void testStorage(Storage testedStorage) {

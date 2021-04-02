@@ -16,7 +16,7 @@ public class ArrayListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected boolean isKeyPresent(Integer key) {
-        return key != null;
+        return key >= 0;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ArrayListStorage extends AbstractStorage<Integer> {
                 return i;
             }
         }
-        return null;
+        return NOT_EXISTING_INDEX;
     }
 
     @Override

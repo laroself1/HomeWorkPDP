@@ -1,6 +1,13 @@
 package storage;
 
+import model.ContactType;
+import model.ListSection;
+import model.Organization;
+import model.OrganizationSection;
+import model.Position;
 import model.Resume;
+import model.SectionType;
+import model.TextSection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import storage.exception.ResumeAlreadyStoredException;
 import storage.exception.ResumeNotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
@@ -27,9 +35,34 @@ public abstract class AbstractStorageTest {
 
     @BeforeEach
     void addResumes() {
-        testInstance.save(new Resume(UUID_MANAGER_CV, "Manager-CV"));
-        testInstance.save(new Resume(UUID_ADMIN_CV, "Admin-CV"));
-        testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV"));
+        testInstance.save(managerCV());
+        testInstance.save(adminCV());
+        testInstance.save(devCV());
+    }
+
+    Resume managerCV() {
+        Resume resume = new Resume(UUID_MANAGER_CV, "Manager Manager");
+        resume.addContact(ContactType.MOBILE, "+3809321238726");
+        resume.addSection(SectionType.EDUCATION, new TextSection("University"));
+        return resume;
+    }
+
+    Resume adminCV() {
+        Resume resume = new Resume(UUID_ADMIN_CV, "Admin Admin");
+        resume.addContact(ContactType.SKYPE, "admin.skype");
+        resume.addSection(SectionType.QUALIFICATIONS, new ListSection(List.of("Qualification1", "Qualification2")));
+        return resume;
+    }
+
+    Resume devCV() {
+        Resume resume = new Resume(UUID_DEV_CV, "Dev Dev");
+        resume.addContact(ContactType.HOME_PAGE, "www.home-page.com");
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusYears(1);
+        List<Position> positions = List.of(new Position(startDate, endDate, "job", "responsibilities"));
+        Organization company = new Organization("company", "www.site.co", positions);
+        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(List.of(company)));
+        return resume;
     }
 
     @AfterEach
@@ -40,7 +73,7 @@ public abstract class AbstractStorageTest {
     @Test
     void get_retrievesStoredResume() {
         Resume actual = testInstance.get(UUID_DEV_CV);
-        Resume expected = new Resume(UUID_DEV_CV, "Developer-CV");
+        Resume expected = devCV();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -68,7 +101,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void save_throwsResumeIsAlreadyStoredException() {
-        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(new Resume(UUID_DEV_CV, "Developer-CV")));
+        Assertions.assertThrows(ResumeAlreadyStoredException.class, () -> testInstance.save(devCV()));
     }
 
     @Test
@@ -88,9 +121,12 @@ public abstract class AbstractStorageTest {
     @Test
     void update_updatesStoredResume() {
         String updatedTitle = "Developer-CV-updated";
-        testInstance.update(new Resume(UUID_DEV_CV, updatedTitle));
+        Resume updatedDevCV = devCV();
+        String email = "mail@mail.com";
+        updatedDevCV.addContact(ContactType.MAIL, email);
+        testInstance.update(updatedDevCV);
 
-        Assertions.assertEquals(updatedTitle, testInstance.get(UUID_DEV_CV).getFullName());
+        Assertions.assertEquals(email, testInstance.get(UUID_DEV_CV).getContact(ContactType.MAIL));
     }
 
     @Test
@@ -100,11 +136,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void getAll_returnsAllResumes() {
-        List<Resume> expected = List.of(
-                new Resume(UUID_ADMIN_CV, "Admin-CV"),
-                new Resume(UUID_DEV_CV, "Developer-CV"),
-                new Resume(UUID_MANAGER_CV, "Manager-CV")
-        );
+        List<Resume> expected = List.of(adminCV(), devCV(), managerCV());
         List<Resume> actual = testInstance.getAllSorted();
         Assertions.assertEquals(expected, actual);
     }
