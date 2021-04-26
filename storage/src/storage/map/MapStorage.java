@@ -2,15 +2,13 @@ package storage.map;
 
 import model.Resume;
 import storage.AbstractStorage;
-import storage.exception.ResumeAlreadyStoredException;
-import storage.exception.ResumeNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage<String> {
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
@@ -19,22 +17,22 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void store(Object key, Resume r) {
-        storage.put((String) key, r);
+    protected void store(String key, Resume r) {
+        storage.put(key, r);
     }
 
     @Override
-    protected void renew(Object key, Resume r) {
-        storage.put((String) key, r);
+    protected void renew(String key, Resume r) {
+        storage.put(key, r);
     }
 
     @Override
-    protected void remove(Object key) {
+    protected void remove(String key) {
         storage.remove(key);
     }
 
     @Override
-    protected Resume find(Object key) {
+    protected Resume find(String key) {
         return storage.get(key);
     }
 
@@ -49,12 +47,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isKeyPresent(Object key) {
+    protected boolean isKeyPresent(String key) {
         return storage.containsKey(key);
     }
 
     @Override
-    protected Object getKey(String uuid) {
+    protected String getKey(String uuid) {
         return uuid;
     }
 }

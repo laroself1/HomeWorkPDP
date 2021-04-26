@@ -2,11 +2,13 @@ package storage.array.sorted;
 
 import model.Resume;
 import storage.array.ArrayStorage;
-import storage.exception.ResumeNotFoundException;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends ArrayStorage {
+    private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
+
 
     public SortedArrayStorage(int size) {
         super(size);
@@ -17,8 +19,8 @@ public class SortedArrayStorage extends ArrayStorage {
 
     @Override
     protected Integer getKey(String uuid) {
-        Resume resume = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, currentSize, resume);
+        Resume resume = new Resume(uuid, "any");
+        return Arrays.binarySearch(storage, 0, currentSize, resume, RESUME_COMPARATOR);
     }
 
 

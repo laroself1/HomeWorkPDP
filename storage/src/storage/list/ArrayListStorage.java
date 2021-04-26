@@ -6,7 +6,7 @@ import storage.AbstractStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayListStorage extends AbstractStorage {
+public class ArrayListStorage extends AbstractStorage<Integer> {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -15,38 +15,38 @@ public class ArrayListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isKeyPresent(Object key) {
-        return key != null;
+    protected boolean isKeyPresent(Integer key) {
+        return key >= 0;
     }
 
     @Override
-    protected Object getKey(String uuid) {
+    protected Integer getKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
-        return null;
+        return NOT_EXISTING_INDEX;
     }
 
     @Override
-    public void store(Object key, Resume r) {
+    public void store(Integer key, Resume r) {
         storage.add(r);
     }
 
     @Override
-    public void renew(Object key, Resume r) {
-        storage.set((int) key, r);
+    public void renew(Integer key, Resume r) {
+        storage.set(key, r);
     }
 
     @Override
-    public void remove(Object key) {
+    public void remove(Integer key) {
         storage.remove((int) key);
     }
 
     @Override
-    public Resume find(Object key) {
-        return storage.get((int) key);
+    public Resume find(Integer key) {
+        return storage.get(key);
     }
 
     @Override

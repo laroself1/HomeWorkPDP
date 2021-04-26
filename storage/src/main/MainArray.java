@@ -1,6 +1,7 @@
 package main;
 
 import model.Resume;
+import service.FilePrintService;
 import storage.Storage;
 import storage.array.simple.SimpleArrayStorage;
 import storage.array.sorted.SortedArrayStorage;
@@ -27,6 +28,7 @@ public class MainArray {
         testStorage(sortedStorage);
         testStorage(arrayListStorage);
         testStorage(mapStorage);
+        new FilePrintService().printAllApplicationFiles("/Users/user/Desktop/JavaSE-app-HW1/storage/src");
     }
 
     private static void testStorage(Storage testedStorage) {
@@ -64,8 +66,7 @@ public class MainArray {
 
     private static void testUpdate(Storage testedStorage) {
         log.info("--------------Update-----------------");
-        r1.setTitle("Updated Title");
-        testedStorage.update(r1);
+        testedStorage.update(new Resume(r1.getUuid(), "Updated Title"));
         Resume updatedResume = testedStorage.get(r1.getUuid());
         log.log(Level.INFO, "Printing Resume: {0}", updatedResume);
     }

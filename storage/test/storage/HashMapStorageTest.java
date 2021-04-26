@@ -15,11 +15,7 @@ public class HashMapStorageTest extends AbstractStorageTest {
 
     @Test
     void getAll_returnsAllResumes() {
-        List<Resume> expected = List.of(
-                new Resume(UUID_ADMIN_CV, "Admin-CV"),
-                new Resume(UUID_DEV_CV, "Developer-CV"),
-                new Resume(UUID_MANAGER_CV, "Manager-CV")
-        );
+        List<Resume> expected = List.of(adminCV(), devCV(), managerCV());
         List<Resume> actual = testInstance.getAllSorted();
         Assertions.assertEquals(expected, actual);
     }
